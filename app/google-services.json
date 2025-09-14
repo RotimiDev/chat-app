@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "156285530271",
+    "project_id": "chat-app-50a34",
+    "storage_bucket": "chat-app-50a34.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156285530271:android:80f5ad91bbf2ee970572aa",
+        "android_client_info": {
+          "package_name": "com.akeemrotimi.chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBANhOpoczWY6b2nIuO3afWgN8BTHckEnU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
