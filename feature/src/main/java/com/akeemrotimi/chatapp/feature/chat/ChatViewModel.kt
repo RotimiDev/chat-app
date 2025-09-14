@@ -58,24 +58,25 @@ class ChatViewModel
             }
         }
 
-    fun sendMessage(message: String) {
-        val chatId = currentChatId ?: return
-        val senderId = currentUserId ?: return
-        if (message.isBlank()) return
+        fun sendMessage(message: String) {
+            val chatId = currentChatId ?: return
+            val senderId = currentUserId ?: return
+            if (message.isBlank()) return
 
-        viewModelScope.launch {
-            val messageObj = Message(
-                id = UUID.randomUUID().toString(),
-                chatId = chatId,
-                senderId = senderId,
-                content = message.trim(),
-                timestamp = System.currentTimeMillis(),
-                isSynced = false
-            )
-            chatRepository.sendMessage(chatId, messageObj)
+            viewModelScope.launch {
+                val messageObj =
+                    Message(
+                        id = UUID.randomUUID().toString(),
+                        chatId = chatId,
+                        senderId = senderId,
+                        content = message.trim(),
+                        timestamp = System.currentTimeMillis(),
+                        isSynced = false,
+                    )
+                chatRepository.sendMessage(chatId, messageObj)
+            }
         }
     }
-}
 
 sealed class ChatUiState {
     data object Loading : ChatUiState()
