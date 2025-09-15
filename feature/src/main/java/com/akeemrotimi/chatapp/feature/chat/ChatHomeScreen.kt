@@ -110,45 +110,45 @@ fun ChatHomeScreen(
                     selected = selectedTab == "chats",
                     onClick = { selectedTab = "chats" },
                     icon = {
-                        Icon(
+                        Image(
                             painter = painterResource(id = R.drawable.ic_chats),
                             contentDescription = "Chats",
                         )
                     },
-                    label = { Text("Chats") },
+                    label = { Text("Chats", color = Color(0xFF727272)) },
                 )
                 NavigationBarItem(
                     selected = selectedTab == "calls",
                     onClick = { selectedTab = "calls" },
                     icon = {
-                        Icon(
+                        Image(
                             painter = painterResource(id = R.drawable.ic_call),
                             contentDescription = "Calls",
                         )
                     },
-                    label = { Text("Calls") },
+                    label = { Text("Calls", color = Color(0xFF727272)) },
                 )
                 NavigationBarItem(
                     selected = selectedTab == "users",
                     onClick = { selectedTab = "users" },
                     icon = {
-                        Icon(
+                        Image(
                             painter = painterResource(id = R.drawable.ic_person),
                             contentDescription = "Users",
                         )
                     },
-                    label = { Text("Users") },
+                    label = { Text("Users",  color = Color(0xFF727272)) },
                 )
                 NavigationBarItem(
                     selected = selectedTab == "groups",
                     onClick = { selectedTab = "groups" },
                     icon = {
-                        Icon(
+                        Image(
                             painter = painterResource(id = R.drawable.ic_group),
                             contentDescription = "Groups",
                         )
                     },
-                    label = { Text("Groups") },
+                    label = { Text("Groups", color = Color(0xFF727272)) },
                 )
             }
         },

@@ -58,18 +58,18 @@ class ChatHomeViewModel
                                 val users = userRepository.getUsers(otherUserIds)
                                 val userMap = users.associateBy { it.id }
 
-                                val chatsWithUsers =
-                                    chats.mapNotNull { chat ->
-                                        val otherUserId = chat.members.firstOrNull { it != currentUserId }
-                                        otherUserId?.let { userId ->
-                                            val user = userMap[userId]
-                                            if (user != null) {
-                                                ChatWithUser(chat, user)
-                                            } else {
-                                                null
-                                            }
-                                        }
+                                val chatsWithUsers = chats.mapNotNull { chat ->
+                                    val otherUserId = chat.members.firstOrNull { it != currentUserId }
+                                    otherUserId?.let { userId ->
+                                        userMap[userId]?.let { user -> ChatWithUser(chat, user) }
                                     }
+                                }
+
+                                if (chatsWithUsers.isEmpty()) {
+                                    _uiState.value = HomeUiState.Empty()
+                                } else {
+                                    _uiState.value = HomeUiState.Success(chatsWithUsers)
+                                }
                                 _uiState.value = HomeUiState.Success(chatsWithUsers)
                             }
                         }
