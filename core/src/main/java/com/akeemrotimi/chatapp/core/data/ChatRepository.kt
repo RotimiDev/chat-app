@@ -62,7 +62,6 @@ class ChatRepository
 
             if (local != null) return local
 
-            // FIXED: Changed from "chats" to "conversations"
             val doc =
                 firestore
                     .collection("conversations")
@@ -82,7 +81,6 @@ class ChatRepository
         }
 
         private fun syncMessages(chatId: String) {
-            // FIXED: Changed from "chats" to "conversations"
             firestore
                 .collection("conversations")
                 .document(chatId)
@@ -109,7 +107,6 @@ class ChatRepository
             messageDao.insertMessage(message.copy(isSynced = false).toEntity())
 
             try {
-                // FIXED: Changed from "chats" to "conversations"
                 val ref =
                     firestore
                         .collection("conversations")
@@ -127,7 +124,6 @@ class ChatRepository
             val unsynced = messageDao.getUnsyncedMessages()
             unsynced.forEach { entity ->
                 try {
-                    // FIXED: Changed from "chats" to "conversations"
                     val ref =
                         firestore
                             .collection("conversations")
