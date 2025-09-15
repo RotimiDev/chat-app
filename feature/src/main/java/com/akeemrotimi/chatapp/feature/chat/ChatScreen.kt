@@ -20,7 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,10 +51,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.akeemrotimi.chatapp.core.common.formatTime
 import com.akeemrotimi.chatapp.core.data.model.Message
 import com.akeemrotimi.chatapp.core.data.model.User
 import com.akeemrotimi.chatapp.core.ui.StatusBarTheme
-import com.akeemrotimi.chatapp.core.common.formatTime
 import com.akeemrotimi.chatapp.feature.R
 
 @Composable
@@ -204,7 +204,7 @@ private fun ChatTopBar(
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
         },
         actions = {
@@ -271,7 +271,7 @@ private fun ChatTopBarSkeleton() {
         },
         navigationIcon = {
             IconButton(onClick = { }) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
         },
     )
@@ -487,7 +487,6 @@ private fun MessageInput(
             FloatingActionButton(
                 onClick = onSendMessage,
                 modifier = Modifier.size(48.dp),
-                containerColor = MaterialTheme.colorScheme.primary,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_send_button),
