@@ -19,6 +19,7 @@ import com.akeemrotimi.chatapp.feature.chat.ChatHomeScreen
 import com.akeemrotimi.chatapp.feature.chat.ChatHomeViewModel
 import com.akeemrotimi.chatapp.feature.chat.ChatScreen
 import com.akeemrotimi.chatapp.feature.chat.ChatViewModel
+import com.akeemrotimi.chatapp.feature.chat.UsersScreen
 import com.akeemrotimi.chatapp.feature.home.HomeDashboardScreen
 import com.google.firebase.auth.FirebaseAuth
 
@@ -109,6 +110,14 @@ fun AppNavigation() {
                 onProfileClick = {
                     //todo
                 },
+            )
+        }
+
+        composable("users") {
+            UsersScreen(
+                onUserClick = { chatId ->
+                    navController.navigate("chat/$chatId")
+                }
             )
         }
 

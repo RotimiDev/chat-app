@@ -10,62 +10,79 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class UserRepository @Inject constructor(
-    private val firestore: FirebaseFirestore,
-    private val auth: FirebaseAuth,
-) {
-    private val usersCollection = firestore.collection("users")
+class UserRepository
+    @Inject
+    constructor(
+        firestore: FirebaseFirestore,
+        private val auth: FirebaseAuth,
+    ) {
+        private val usersCollection = firestore.collection("users")
 
-    fun getCurrentUserId(): String? {
-        return auth.currentUser?.uid
-    }
+        fun getCurrentUserId(): String? = auth.currentUser?.uid
 
-    suspend fun getUser(userId: String): User? {
-        return try {
-            val snapshot = usersCollection.document(userId).get().await()
-            snapshot.toObject(User::class.java)
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    suspend fun getUsers(userIds: List<String>): List<User> {
-        return try {
-            if (userIds.isEmpty()) return emptyList()
-
-            val snapshot = usersCollection
-                .whereIn(FieldPath.documentId(), userIds)
-                .get()
-                .await()
-
-            snapshot.documents.mapNotNull { it.toObject(User::class.java) }
-        } catch (e: Exception) {
-            emptyList()
-        }
-    }
-
-    fun getUsersFlow(userIds: List<String>): Flow<List<User>> = callbackFlow {
-        val subscription = usersCollection.whereIn("id", userIds)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
-                val users = snapshot?.documents?.mapNotNull { it.toObject(User::class.java) } ?: emptyList()
-                trySend(users)
+        suspend fun getUser(userId: String): User? =
+            try {
+                val snapshot = usersCollection.document(userId).get().await()
+                snapshot.toObject(User::class.java)
+            } catch (e: Exception) {
+                null
             }
-        awaitClose { subscription.remove() }
-    }
 
-    suspend fun updateOnlineStatus(userId: String, isOnline: Boolean) {
-        val updates = mapOf(
-            "isOnline" to isOnline,
-            "lastSeen" to System.currentTimeMillis()
-        )
-        usersCollection.document(userId).update(updates).await()
-    }
+        suspend fun getUsers(userIds: List<String>): List<User> {
+            return try {
+                if (userIds.isEmpty()) return emptyList()
 
-    suspend fun createUser(user: User) {
-        usersCollection.document(user.id).set(user).await()
+                val snapshot =
+                    usersCollection
+                        .whereIn(FieldPath.documentId(), userIds)
+                        .get()
+                        .await()
+
+                snapshot.documents.mapNotNull { it.toObject(User::class.java) }
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+
+        fun getAllUsersFlow(): Flow<List<User>> =
+            callbackFlow {
+                val subscription =
+                    usersCollection.addSnapshotListener { snapshot, error ->
+                        if (error != null) {
+                            close(error)
+                            return@addSnapshotListener
+                        }
+                        val users =
+                            snapshot?.documents?.mapNotNull { it.toObject(User::class.java) } ?: emptyList()
+                        trySend(users)
+                    }
+                awaitClose { subscription.remove() }
+            }
+
+        fun getUsersFlow(userIds: List<String>): Flow<List<User>> =
+            callbackFlow {
+                if (userIds.isEmpty()) {
+                    trySend(emptyList())
+                    close()
+                    return@callbackFlow
+                }
+
+                val subscription =
+                    usersCollection
+                        .whereIn(FieldPath.documentId(), userIds)
+                        .addSnapshotListener { snapshot, error ->
+                            if (error != null) {
+                                close(error)
+                                return@addSnapshotListener
+                            }
+                            val users =
+                                snapshot
+                                    ?.documents
+                                    ?.mapNotNull { it.toObject(User::class.java) }
+                                    ?: emptyList()
+                            trySend(users)
+                        }
+
+                awaitClose { subscription.remove() }
+            }
     }
-}

@@ -136,4 +136,27 @@ class ChatRepository
                 }
             }
         }
+
+    suspend fun createChatIfNotExists(currentUserId: String, otherUserId: String): String {
+        val query = firestore.collection("chats")
+            .whereArrayContains("userIds", currentUserId)
+            .get()
+            .await()
+
+        val existing = query.documents.firstOrNull { doc ->
+            val members = doc.get("userIds") as? List<*>
+            members?.contains(otherUserId) == true
+        }
+
+        return if (existing != null) {
+            existing.id
+        } else {
+            val chat = mapOf(
+                "userIds" to listOf(currentUserId, otherUserId),
+                "lastMessage" to "",
+                "timestamp" to System.currentTimeMillis()
+            )
+            firestore.collection("chats").add(chat).await().id
+        }
     }
+}

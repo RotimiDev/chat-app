@@ -78,23 +78,6 @@ class ChatHomeViewModel @Inject constructor(
     private fun getCurrentUserId(): String {
         return authRepository.getCurrentUser()?.uid ?: ""
     }
-
-    private fun observeUserStatus() {
-        viewModelScope.launch {
-            uiState.collect { state ->
-                if (state is HomeUiState.Success) {
-                    val userIds = state.chats.map { it.otherUser.id }
-                    userRepository.getUsersFlow(userIds).collect { users ->
-                        val updatedChats = state.chats.map { chatWithUser ->
-                            val updatedUser = users.find { it.id == chatWithUser.otherUser.id }
-                            chatWithUser.copy(otherUser = updatedUser ?: chatWithUser.otherUser)
-                        }
-                        _uiState.value = HomeUiState.Success(updatedChats)
-                    }
-                }
-            }
-        }
-    }
 }
 
 sealed class HomeUiState {
