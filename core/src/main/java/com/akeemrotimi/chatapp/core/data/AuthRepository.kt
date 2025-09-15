@@ -61,8 +61,4 @@ class AuthRepository
         }
 
         fun getCurrentUser(): FirebaseUser? = auth.currentUser
-
-        fun signOut() {
-            auth.signOut()
-        }
     }
