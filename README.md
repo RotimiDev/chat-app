@@ -45,8 +45,6 @@ This is a simple real-time chat application built with Jetpack Compose, Room, an
 <img width="250" height="1200" alt="Screenshot_20250915_155051" src="https://github.com/user-attachments/assets/779f07dc-4284-4e38-a83d-b11f944f10f4" />
 <img width="250" height="1200" alt="Screenshot_20250915_155128" src="https://github.com/user-attachments/assets/8e39a2a2-60f5-4290-bb28-a67be21c1eba" />
 <img width="250" height="1200" alt="Screenshot_20250915_155141" src="https://github.com/user-attachments/assets/c66e7dda-7a4f-4621-abdd-bc3a519f4a1d" />
-<img width="250" height="1200" alt="Screenshot_20250915_151952" src="https://github.com/user-attachments/assets/93aa7f5f-f6b8-474d-87b7-a035c60da937" />
-
 
 ## Getting Started
 
