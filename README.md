@@ -1,12 +1,12 @@
 # Chat Application
 
-📌 ## Overview
+## Overview
 
 This is a simple real-time chat application built with Jetpack Compose, Room, and Firebase Firestore.
 
-## 🏗️ Architecture & Design Decisions
+## Architecture & Design Decisions
 
-**Multi-layered Architecture:**
+**Modularization (app, core and feature library modules):**
 - UI (Jetpack Compose) → displays chat lists and conversations.
 - ViewModel (AndroidX Lifecycle) → manages state, listens for Firestore updates, and triggers database sync.
 
@@ -18,7 +18,7 @@ This is a simple real-time chat application built with Jetpack Compose, Room, an
 
 **Offline-First Approach:** Messages are stored locally first, then synced to Firestore in the background.
 
-## ✅ Features Implemented
+## Features Implemented
 
 - User Authentication (Firebase Auth).
 - Chat List Screen showing all active chats.
@@ -27,13 +27,13 @@ This is a simple real-time chat application built with Jetpack Compose, Room, an
 - Firestore Sync (syncPendingMessages) ensures reliability.
 - Push Notifications Ready (via Firebase Messaging, basic setup included).
 
-## 🎁 Extras
+## Extras
 
 - Added unsynced message retry mechanism (pending messages sync automatically).
 - Material 3 UI with Compose.
 - Hilt DI for cleaner, testable code.
 
-## ⚠️ Known Issues / Improvements
+## Known Issues / Improvements
 
 - Typing Indicator not yet implemented.
 - Message Read Receipts missing.
@@ -41,15 +41,12 @@ This is a simple real-time chat application built with Jetpack Compose, Room, an
 - Better Error Handling could be added for network and database sync failures.
 - UI Polish (avatars, message bubbles, timestamps) could be improved with more time.
 
-## 📸 Screenshots
+## Screenshots
+<img width="250" height="1200" alt="Screenshot_20250915_155051" src="https://github.com/user-attachments/assets/779f07dc-4284-4e38-a83d-b11f944f10f4" />
+<img width="250" height="1200" alt="Screenshot_20250915_155128" src="https://github.com/user-attachments/assets/8e39a2a2-60f5-4290-bb28-a67be21c1eba" />
+<img width="250" height="1200" alt="Screenshot_20250915_155141" src="https://github.com/user-attachments/assets/c66e7dda-7a4f-4621-abdd-bc3a519f4a1d" />
 
-Include a few screenshots here (chat list, chat detail, message sending).
-
-Example:
-`screenshots/chat_list.png`  
-`screenshots/chat_detail.png`
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Android Studio Arctic Fox or later
@@ -62,7 +59,7 @@ Example:
 3. Add your `google-services.json` file
 4. Build and run the project
 
-## 📦 Dependencies
+## Dependencies
 
 - Jetpack Compose
 - Room Database
@@ -72,7 +69,7 @@ Example:
 - Hilt for Dependency Injection
 - Material Design 3
 
-## 🔧 Building
+## Building
 
 To build this project, simply open it in Android Studio and click "Run" or use the command line:
 
