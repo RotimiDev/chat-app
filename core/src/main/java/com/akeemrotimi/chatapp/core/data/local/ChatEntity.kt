@@ -18,7 +18,7 @@ data class ChatEntity(
 fun ChatEntity.toDomain(): Chat =
     Chat(
         id = id,
-        participants = participants.split(","),
+        members = participants.split(","),
         lastMessage = lastMessage,
         lastMessageTime = lastMessageTime,
         unreadCount = unreadCount,
@@ -29,7 +29,7 @@ fun ChatEntity.toDomain(): Chat =
 fun Chat.toEntity(): ChatEntity =
     ChatEntity(
         id = id,
-        participants = participants.joinToString(","),
+        participants = members.joinToString(","),
         lastMessage = lastMessage,
         lastMessageTime = lastMessageTime,
         unreadCount = unreadCount,

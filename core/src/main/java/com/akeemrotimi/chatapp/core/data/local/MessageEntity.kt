@@ -24,7 +24,7 @@ data class MessageEntity(
     val senderId: String,
     val content: String,
     val timestamp: Long,
-    val isSynced: Boolean = true
+    val isSynced: Boolean = true,
 )
 
 fun MessageEntity.toDomain(): Message =
@@ -34,7 +34,7 @@ fun MessageEntity.toDomain(): Message =
         senderId = senderId,
         content = content,
         timestamp = timestamp,
-        isSynced = isSynced
+        isSynced = isSynced,
     )
 
 fun Message.toEntity(): MessageEntity =
@@ -44,5 +44,5 @@ fun Message.toEntity(): MessageEntity =
         senderId = senderId,
         content = content,
         timestamp = timestamp,
-        isSynced = isSynced
+        isSynced = isSynced,
     )

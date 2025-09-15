@@ -41,12 +41,12 @@ class ChatViewModel
                     return@launch
                 }
 
-                val otherUserId = chat.userIds.firstOrNull { it != currentUserId }
+                val otherUserId = chat.members.firstOrNull { it != currentUserId }
                 val otherUser = otherUserId?.let { userRepository.getUser(it) }
 
                 combine(
                     chatRepository.getMessagesFlow(chatId),
-                    userRepository.getUsersFlow(chat.userIds),
+                    userRepository.getUsersFlow(chat.members),
                 ) { messages, users ->
                     ChatUiState.Success(
                         messages = messages,

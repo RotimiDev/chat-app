@@ -54,9 +54,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.akeemrotimi.chatapp.core.common.formatTime
-import com.akeemrotimi.chatapp.core.common.utils.getLastMessagePreview
 import com.akeemrotimi.chatapp.core.data.model.ChatWithUser
+import com.akeemrotimi.chatapp.core.data.model.MessageType
 import com.akeemrotimi.chatapp.feature.R
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
@@ -311,11 +312,10 @@ private fun ChatItem(
     val user = chatWithUser.otherUser
 
     Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable { onClick() }
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
@@ -325,19 +325,17 @@ private fun ChatItem(
                 AsyncImage(
                     model = user.profilePictureUrl,
                     contentDescription = "${user.displayName} profile",
-                    modifier =
-                        Modifier
-                            .size(56.dp)
-                            .clip(CircleShape),
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape),
                     contentScale = ContentScale.Crop,
                 )
             } else {
                 Box(
-                    modifier =
-                        Modifier
-                            .size(56.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFE0E0E0)),
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFE0E0E0)),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
@@ -351,22 +349,20 @@ private fun ChatItem(
 
             if (user.isOnline) {
                 Box(
-                    modifier =
-                        Modifier
-                            .size(14.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFF4CAF50))
-                            .border(2.dp, Color.White, CircleShape)
-                            .align(Alignment.BottomEnd),
+                    modifier = Modifier
+                        .size(14.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFF4CAF50))
+                        .border(2.dp, Color.White, CircleShape)
+                        .align(Alignment.BottomEnd),
                 )
             }
         }
 
         Column(
-            modifier =
-                Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -375,11 +371,10 @@ private fun ChatItem(
             ) {
                 Text(
                     text = user.displayName,
-                    style =
-                        MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                        ),
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                    ),
                     color = Color(0xFF141414),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -387,10 +382,9 @@ private fun ChatItem(
 
                 Text(
                     text = formatTime(chat.lastMessageTime),
-                    style =
-                        MaterialTheme.typography.bodySmall.copy(
-                            fontSize = 12.sp,
-                        ),
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontSize = 12.sp,
+                    ),
                     color = Color(0xFF9E9E9E),
                 )
             }
@@ -399,38 +393,117 @@ private fun ChatItem(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = getLastMessagePreview(chat.lastMessage, chat.lastMessageType),
-                    style =
-                        MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 14.sp,
-                        ),
-                    color = Color(0xFF666666),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f),
-                )
+                when (chat.lastMessageType) {
+                    MessageType.AUDIO -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_chat_voice_message),
+                            contentDescription = "Audio",
+                            modifier = Modifier.size(16.dp),
+                            tint = Color(0xFF666666)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Audio",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 14.sp,
+                            ),
+                            color = Color(0xFF666666),
+                            maxLines = 1,
+                        )
+                    }
+                    MessageType.VIDEO -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_chat_video),
+                            contentDescription = "Video",
+                            modifier = Modifier.size(16.dp),
+                            tint = Color(0xFF666666)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Video",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 14.sp,
+                            ),
+                            color = Color(0xFF666666),
+                            maxLines = 1,
+                        )
+                    }
+                    MessageType.IMAGE -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_chat_image),
+                            contentDescription = "Photo",
+                            modifier = Modifier.size(16.dp),
+                            tint = Color(0xFF666666)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Photo",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 14.sp,
+                            ),
+                            color = Color(0xFF666666),
+                            maxLines = 1,
+                        )
+                    }
+                    MessageType.DOCUMENT -> {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_chat_image),
+                            contentDescription = "Document",
+                            modifier = Modifier.size(16.dp),
+                            tint = Color(0xFF666666)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Document",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 14.sp,
+                            ),
+                            color = Color(0xFF666666),
+                            maxLines = 1,
+                        )
+                    }
+                    MessageType.TEXT -> {
+                        if (chat.lastMessage == FirebaseAuth.getInstance().currentUser?.uid) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_chat_delivered),
+                                contentDescription = "Delivered",
+                                modifier = Modifier.size(16.dp),
+                                tint = Color(0xFF666666)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                        }
+
+                        Text(
+                            text = chat.lastMessage.ifEmpty { "Start a conversation" },
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 14.sp,
+                            ),
+                            color = Color(0xFF666666),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
 
                 if (chat.unreadCount > 0) {
+                    Spacer(modifier = Modifier.weight(1f))
                     Box(
-                        modifier =
-                            Modifier
-                                .size(20.dp)
-                                .clip(CircleShape)
-                                .background(Color(0xFF6C5CE7)),
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFF6C5CE7)),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = if (chat.unreadCount > 99) "99+" else chat.unreadCount.toString(),
-                            style =
-                                MaterialTheme.typography.labelSmall.copy(
-                                    color = Color.White,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                ),
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = Color.White,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                            ),
                         )
                     }
                 }

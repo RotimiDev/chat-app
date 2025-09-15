@@ -35,8 +35,9 @@ class ChatRepository
 
         private fun syncChats(currentUserId: String) {
             firestore
-                .collection("chats")
-                .whereArrayContains("userIds", currentUserId)
+                .collection("conversations")
+                .whereArrayContains("members", currentUserId)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener { snapshot, error ->
                     if (error != null) return@addSnapshotListener
                     snapshot?.let { snap ->
@@ -61,9 +62,10 @@ class ChatRepository
 
             if (local != null) return local
 
+            // FIXED: Changed from "chats" to "conversations"
             val doc =
                 firestore
-                    .collection("chats")
+                    .collection("conversations")
                     .document(chatId)
                     .get()
                     .await()
@@ -80,8 +82,9 @@ class ChatRepository
         }
 
         private fun syncMessages(chatId: String) {
+            // FIXED: Changed from "chats" to "conversations"
             firestore
-                .collection("chats")
+                .collection("conversations")
                 .document(chatId)
                 .collection("messages")
                 .orderBy("timestamp", Query.Direction.ASCENDING)
@@ -106,9 +109,10 @@ class ChatRepository
             messageDao.insertMessage(message.copy(isSynced = false).toEntity())
 
             try {
+                // FIXED: Changed from "chats" to "conversations"
                 val ref =
                     firestore
-                        .collection("chats")
+                        .collection("conversations")
                         .document(chatId)
                         .collection("messages")
                         .add(message.copy(isSynced = true))
@@ -123,9 +127,10 @@ class ChatRepository
             val unsynced = messageDao.getUnsyncedMessages()
             unsynced.forEach { entity ->
                 try {
+                    // FIXED: Changed from "chats" to "conversations"
                     val ref =
                         firestore
-                            .collection("chats")
+                            .collection("conversations")
                             .document(chatId)
                             .collection("messages")
                             .add(entity.toDomain().copy(isSynced = true))
@@ -137,26 +142,35 @@ class ChatRepository
             }
         }
 
-    suspend fun createChatIfNotExists(currentUserId: String, otherUserId: String): String {
-        val query = firestore.collection("chats")
-            .whereArrayContains("userIds", currentUserId)
-            .get()
-            .await()
+        suspend fun createChatIfNotExists(
+            currentUserId: String,
+            otherUserId: String,
+        ): String {
+            val query =
+                firestore
+                    .collection("conversations")
+                    .whereArrayContains("members", currentUserId)
+                    .get()
+                    .await()
 
-        val existing = query.documents.firstOrNull { doc ->
-            val members = doc.get("userIds") as? List<*>
-            members?.contains(otherUserId) == true
-        }
+            val existing =
+                query.documents.firstOrNull { doc ->
+                    val members = doc.get("members") as? List<*>
+                    members?.contains(otherUserId) == true
+                }
 
-        return if (existing != null) {
-            existing.id
-        } else {
-            val chat = mapOf(
-                "userIds" to listOf(currentUserId, otherUserId),
-                "lastMessage" to "",
-                "timestamp" to System.currentTimeMillis()
-            )
-            firestore.collection("chats").add(chat).await().id
+            return existing?.id ?: run {
+                val chat =
+                    mapOf(
+                        "members" to listOf(currentUserId, otherUserId),
+                        "lastMessage" to "",
+                        "timestamp" to System.currentTimeMillis(),
+                    )
+                firestore
+                    .collection("conversations")
+                    .add(chat)
+                    .await()
+                    .id
+            }
         }
     }
-}

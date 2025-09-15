@@ -46,16 +46,32 @@ class UserRepository
 
         fun getAllUsersFlow(): Flow<List<User>> =
             callbackFlow {
+                val currentUserId = getCurrentUserId()
+                if (currentUserId == null) {
+                    close(Exception("User not authenticated"))
+                    return@callbackFlow
+                }
+
                 val subscription =
-                    usersCollection.addSnapshotListener { snapshot, error ->
-                        if (error != null) {
-                            close(error)
-                            return@addSnapshotListener
+                    usersCollection
+                        .addSnapshotListener { snapshot, error ->
+                            if (error != null) {
+                                close(error)
+                                return@addSnapshotListener
+                            }
+
+                            val users =
+                                snapshot?.documents?.mapNotNull { doc ->
+                                    if (doc.id != currentUserId) {
+                                        doc.toObject(User::class.java)?.copy(id = doc.id)
+                                    } else {
+                                        null
+                                    }
+                                } ?: emptyList()
+
+                            trySend(users)
                         }
-                        val users =
-                            snapshot?.documents?.mapNotNull { it.toObject(User::class.java) } ?: emptyList()
-                        trySend(users)
-                    }
+
                 awaitClose { subscription.remove() }
             }
 
