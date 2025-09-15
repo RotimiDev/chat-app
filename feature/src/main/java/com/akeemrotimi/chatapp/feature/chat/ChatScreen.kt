@@ -348,9 +348,9 @@ private fun MessageItem(
                 CardDefaults.cardColors(
                     containerColor =
                         if (isFromCurrentUser) {
-                            MaterialTheme.colorScheme.primary
+                            Color(0xFF6852D6)
                         } else {
-                            MaterialTheme.colorScheme.surfaceVariant
+                            Color(0xFFE8E8E8)
                         },
                 ),
             shape =
